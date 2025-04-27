@@ -9,7 +9,6 @@
         <None Include="Day1\Day1.fsx" />
         <Content Include="Day1\input.txt" />
         <Content Include="Day1\example_input.txt" />
-        <Content Include="LICENSE" />
     </ItemGroup>
 
 </Project>
