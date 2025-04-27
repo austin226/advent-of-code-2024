@@ -11,17 +11,14 @@ module Common =
         fileContents
 
 module Part1 =
-    let allIncreasing (levels: int array) =
-        levels
-        |> Array.pairwise
-        |> Array.map (fun p -> fst p <= snd p)
-        |> Array.forall id
+    let allPairs array condition =
+        array |> Array.pairwise |> Array.map condition |> Array.forall id
 
-    let allDecreasing (levels: int array) =
-        levels
-        |> Array.pairwise
-        |> Array.map (fun p -> fst p >= snd p)
-        |> Array.forall id
+    let allIncreasing levels =
+        allPairs levels (fun p -> fst p <= snd p)
+
+    let allDecreasing levels =
+        allPairs levels (fun p -> fst p >= snd p)
 
     let monotonic levels =
         allIncreasing levels || allDecreasing levels
@@ -30,8 +27,7 @@ module Part1 =
         let diff = abs (fst pair - snd pair)
         diff >= 1 && diff <= 3
 
-    let allGradual (levels: int array) =
-        levels |> Array.pairwise |> Array.map gradualChange |> Array.forall id
+    let allGradual levels = allPairs levels gradualChange
 
     let safe levels = monotonic levels && allGradual levels
 
