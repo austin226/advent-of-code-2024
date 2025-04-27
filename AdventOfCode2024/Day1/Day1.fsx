@@ -1,10 +1,5 @@
 ﻿// https://adventofcode.com/2024/day/1
 
-(*
-Pair up the smallest number in the left list with the smallest number in the right list,
-then the second-smallest left number with the second-smallest right number, and so on.
-*)
-
 module Part1 =
     open System.IO
 
