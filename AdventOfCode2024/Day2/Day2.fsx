@@ -11,27 +11,27 @@ module Common =
         fileContents
 
 module Part1 =
-    let allPairs condition array =
-        array |> Array.pairwise |> Array.map condition |> Array.forall id
+    let safe levels =
+        let allPairs condition array =
+            array |> Array.pairwise |> Array.map condition |> Array.forall id
 
-    let allIncreasing = allPairs (fun p -> fst p <= snd p)
+        let monotonic levels =
+            let allIncreasing = allPairs (fun p -> fst p <= snd p)
+            let allDecreasing = allPairs (fun p -> fst p >= snd p)
+            allIncreasing levels || allDecreasing levels
 
-    let allDecreasing = allPairs (fun p -> fst p >= snd p)
+        let allGradual =
+            let gradualChange pair =
+                let diff = abs (fst pair - snd pair)
+                diff >= 1 && diff <= 3
 
-    let monotonic levels =
-        allIncreasing levels || allDecreasing levels
+            allPairs gradualChange
 
-    let gradualChange pair =
-        let diff = abs (fst pair - snd pair)
-        diff >= 1 && diff <= 3
-
-    let allGradual = allPairs gradualChange
-
-    let safe levels = monotonic levels && allGradual levels
-
-    let parseReport line = line |> Array.map int
+        monotonic levels && allGradual levels
 
     let solve fileName =
+        let parseReport line = line |> Array.map int
+
         let reports =
             Common.input fileName |> Array.map _.Split(" ") |> Array.map parseReport
 
