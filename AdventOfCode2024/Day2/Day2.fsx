@@ -4,11 +4,7 @@ module Common =
     open System.IO
 
     let input fileName =
-        let dir = __SOURCE_DIRECTORY__
-        let inFile = $"{dir}/{fileName}"
-        let fileContents = File.ReadAllLines inFile
-
-        fileContents
+        File.ReadAllLines $"{__SOURCE_DIRECTORY__}/{fileName}"
 
     let safe report =
         let allPairs condition =
@@ -28,36 +24,27 @@ module Common =
 
         monotonic && allGradual
 
-module Part1 =
-    let solve fileName =
+    let solve fileName condition =
         let parseReport line = line |> Array.map int
+        let reports = input fileName |> Array.map _.Split(" ") |> Array.map parseReport
+        reports |> Array.filter condition |> Array.length
 
-        let reports =
-            Common.input fileName |> Array.map _.Split(" ") |> Array.map parseReport
+module Part1 =
+    open Common
 
-        reports |> Array.filter Common.safe |> Array.length
-
-
-    let exampleResult = solve "example_input.txt"
-    let fullResult = solve "input.txt"
+    let exampleResult = solve "example_input.txt" safe
+    let fullResult = solve "input.txt" safe
 
 module Part2 =
-    let rmIdx (report: int array) i =
+    open Common
+
+    let rmIdx report i =
         report
         |> Array.mapi (fun j x -> if i <> j then Some x else None)
         |> Array.choose id
 
-    let alts (report: int array) = Seq.init report.Length (rmIdx report)
+    let alts (report: 'a array) = Seq.init report.Length (rmIdx report)
+    let almostSafe = alts >> Seq.exists safe
 
-    let almostSafe (report: int array) = alts report |> Seq.exists Common.safe
-
-    let solve fileName =
-        let parseReport line = line |> Array.map int
-
-        let reports =
-            Common.input fileName |> Array.map _.Split(" ") |> Array.map parseReport
-
-        reports |> Array.filter almostSafe |> Array.length
-
-    let exampleResult = solve "example_input.txt"
-    let fullResult = solve "input.txt"
+    let exampleResult = solve "example_input.txt" almostSafe
+    let fullResult = solve "input.txt" almostSafe
